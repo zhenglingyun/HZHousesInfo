@@ -1,0 +1,5 @@
+{
+  "name": "House",
+  "type": "iceworks",
+  "builder": "@ali/builder-iceworks"
+}
