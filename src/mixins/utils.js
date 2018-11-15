@@ -8,6 +8,9 @@ function request(url, callback) {
 
 function formatDate(shijianchuo) {
   //shijianchuo是整数，否则要parseInt转换
+  if (typeof shijianchuo !== 'number') {
+    shijianchuo = parseInt(shijianchuo)
+  }
   var time = new Date(shijianchuo)
   var y = time.getFullYear()
   var m = time.getMonth() + 1

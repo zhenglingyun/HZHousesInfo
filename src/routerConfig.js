@@ -4,21 +4,19 @@
 
 import BasicLayout from './layouts/BasicLayout'
 import LibManagement from './pages/LibManagement'
-import LibBorrow from './pages/LibBorrow'
-import LibRecommend from './pages/LibRecommend'
-import LibDonation from './pages/LibDonation'
+import LibFloorDetail from './pages/LibFloorDetail'
 import NotFound from './pages/NotFound'
 
 const routerConfig = [
   {
-    path: '/house',
+    path: '/',
     layout: BasicLayout,
     component: LibManagement
   },
   {
-    path: '/house/recommand',
+    path: '/detail',
     layout: BasicLayout,
-    component: LibBorrow
+    component: LibFloorDetail
   },
   {
     path: '*',

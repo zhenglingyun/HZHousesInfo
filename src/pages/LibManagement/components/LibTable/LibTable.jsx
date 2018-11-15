@@ -31,6 +31,8 @@ const status = {
   '6': '已摇号'
 }
 
+const pageSize = 10
+
 export default class LibTable extends Component {
   static displayName = 'LibTable'
 
@@ -51,14 +53,14 @@ export default class LibTable extends Component {
   }
 
   componentDidMount() {
-    this.reqDataList(20)
+    this.reqDataList()
   }
 
-  reqDataList(pageSize) {
+  reqDataList() {
     this.setState({
       showLoading: true
     })
-    var url = `https://www.dapei2.com/api/v1/house/area_status?id=${this.state.currentStausId}&areaId=${this.state.currentAreaId}&page=${this.state.currentPage}&size=10`
+    var url = `https://www.dapei2.com/api/v1/house/area_status?id=${this.state.currentStausId}&areaId=${this.state.currentAreaId}&page=${this.state.currentPage}&size=${pageSize}`
     request(url, (response) => {
       console.log(response)
       if (response && response.data && response.data.data && response.data.data.data) {
@@ -69,7 +71,6 @@ export default class LibTable extends Component {
           currentPage: response.data.data.current_page,
           totalPage: response.data.data.total
         })
-        console.log(this.state.dataSource)
       }
       this.setState({
         showLoading: false
@@ -77,14 +78,15 @@ export default class LibTable extends Component {
     })
   }
 
-  handlePaginationChange = (current) => {
-    this.setState({
-      current
-    })
-  }
-
-  onChange = (selectedItems) => {
-    console.log('onChange callback', selectedItems)
+  handlePaginationChange = (currentPage) => {
+    this.setState(
+      {
+        currentPage
+      },
+      () => {
+        this.reqDataList()
+      }
+    )
   }
 
   onFilterChange = (value) => {
@@ -108,22 +110,18 @@ export default class LibTable extends Component {
       this.state.currentStausId = statusId
       this.state.currentPage = 1
 
-      this.reqDataList(20)
+      this.reqDataList()
     }
   }
 
   renderOper = (value, index, record) => {
     return (
       <div>
-        <Link to={`/house/recommand?id=${record.id}`}>
-          <a style={{ ...styles.button, ...styles.detailButton }}>查看</a>
+        <Link to={`/detail?id=${record.id}`}>
+          <p style={{ ...styles.button, ...styles.detailButton }}>查看</p>
         </Link>
       </div>
     )
-  }
-
-  renderState = (value) => {
-    return <span style={styles.state}>{value}</span>
   }
 
   renderImage = (value, index, record) => {
@@ -169,7 +167,7 @@ export default class LibTable extends Component {
             <Table.Column title="操作" width={100} cell={this.renderOper} />
           </Table>
         </Loading>
-        <Pagination style={styles.pagination} pageSize={10} current={this.state.currentPage} total={this.state.totalPage} onChange={this.handlePaginationChange} />
+        <Pagination style={styles.pagination} pageSize={pageSize} current={this.state.currentPage} total={this.state.totalPage} onChange={this.handlePaginationChange} />
       </div>
     )
   }

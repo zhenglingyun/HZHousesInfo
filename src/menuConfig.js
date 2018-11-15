@@ -4,13 +4,8 @@
 const asideMenuConfig = [
   {
     name: '全部楼盘',
-    path: '/house',
+    path: '/',
     icon: 'home2'
-  },
-  {
-    name: '楼盘推荐',
-    path: '/house/recommand',
-    icon: 'cascades'
   }
 ]
 
