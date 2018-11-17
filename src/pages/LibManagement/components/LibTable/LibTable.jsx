@@ -1,35 +1,9 @@
 import React, { Component } from 'react'
 import { Table, Pagination } from '@icedesign/base'
 import LibTableFilter from './LibTableFilter'
-import { request, formatDate } from '../../../../mixins/utils'
+import { areas, status, request, formatDate } from '../../../../mixins/utils'
 import { Loading } from '@icedesign/base'
 import { Link } from 'react-router-dom'
-
-const areas = {
-  '0': '全部区域',
-  '1': '上城区',
-  '2': '下城区',
-  '3': '江干区',
-  '4': '拱墅区',
-  '5': '西湖区',
-  '6': '滨江区',
-  '7': '萧山区',
-  '8': '余杭区',
-  '9': '富阳区',
-  '10': '临安区',
-  '11': '建德市',
-  '12': '淳安县',
-  '13': '大江东'
-}
-
-const status = {
-  '1': '全部楼盘',
-  '2': '即将拿证',
-  '3': '正在公示',
-  '4': '正在登记',
-  '5': '即将摇号',
-  '6': '已摇号'
-}
 
 const pageSize = 10
 

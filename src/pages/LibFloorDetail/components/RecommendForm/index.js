@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import IceContainer from '@icedesign/container'
 import { Select, Table } from '@icedesign/base'
-import { request, formatDate } from '../../../../mixins/utils'
-import Img from '@icedesign/img'
-import Step from '../LibStep'
+import { areas, status, request, formatDate } from '../../../../mixins/utils'
 
-const { Option } = Select
+import Img from '@icedesign/img'
+import Step from '../../../../components/LibStep'
+import InfoDisplay from '../../../../components/InfoDisplay/InfoDisplay'
 
 export default class RecommendForm extends Component {
   static displayName = 'RecommendForm'
@@ -39,7 +39,8 @@ export default class RecommendForm extends Component {
         }
       ],
       timeInfo: [],
-      inSale: true
+      inSale: true,
+      xsfa: []
     }
   }
 
@@ -74,7 +75,7 @@ export default class RecommendForm extends Component {
       info[1].second_value = this.getIfNotNull(data.register_room, '户')
 
       info[2].all_value = this.getIfNotNull(data.all_rate, '%')
-      info[2].none_value = this.getIfNotNull(data.first_no_hit_rate, '%')
+      info[2].none_value = this.getIfNotNull(data.first_no_hit_rate, '%(首轮)')
       info[2].second_value = this.getIfNotNull(data.second_no_hit_rate, '%')
 
       var inSale = false
@@ -103,11 +104,43 @@ export default class RecommendForm extends Component {
         inSale = true
       }
 
+      const xsfa = this.state.xsfa
+      xsfa.splice(0, xsfa.length)
+      xsfa.push({
+        label: '所属区域',
+        value: areas[data.areaId]
+      })
+      xsfa.push({
+        label: '报名时间',
+        value: formatDate(data.start_time) + '-' + formatDate(data.end_time)
+      })
+      xsfa.push({
+        label: '摇号时间',
+        value: formatDate(data.yaohao_time)
+      })
+      xsfa.push({
+        label: '房源均价',
+        value: data.avg_price + (data.renovation ? data.renovation : '')
+      })
+      xsfa.push({
+        label: '主力户型',
+        value: data.unit_area
+      })
+      xsfa.push({
+        label: '验资',
+        value: data.certify
+      })
+      xsfa.push({
+        label: '登记方式',
+        value: data.address
+      })
+
       this.setState({
         data,
         info,
         timeInfo,
-        inSale
+        inSale,
+        xsfa
       })
     })
   }
@@ -128,20 +161,33 @@ export default class RecommendForm extends Component {
     const { data, info } = this.state
     return (
       <IceContainer style={styles.container}>
-        <div style={styles.title}>楼盘详情 - {data.name}</div>
+        <div style={styles.title}>
+          楼盘详情{data.name ? ' - ' + data.name : ''}
+          {data.category_id ? ' - ' + status[data.category_id] : ''}
+          <a
+            style={{ fontSize: '12px', marginLeft: '20px' }}
+            href={`https://3gimg.qq.com/lightmap/v1/marker/index.html?type=0&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp&marker=coord%3A${data.lat}%2C${data.lng}`}
+            target="_blank"
+          >
+            {data.poiaddress}
+          </a>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Img src={data.img} height={200} />
-          <Table dataSource={info} hasBorder={true} style={styles.table}>
-            <Table.Column align="center" title="房源信息" width={100} dataIndex="props" />
-            <Table.Column align="center" title="全部" width={100} dataIndex="all_value" />
-            <Table.Column align="center" title="无房" dataIndex="none_value" width={100} />
-            <Table.Column align="center" title="有房" dataIndex="second_value" width={100} />
-          </Table>
-
           <div style={{ display: this.state.inSale ? 'block' : 'none' }}>
             <Step datas={this.state.timeInfo} style={{ width: '1400px', backgroundColor: '#FF0000' }} />
           </div>
+          <Table dataSource={info} hasBorder={true} style={styles.table}>
+            <Table.Column align="center" title="房源信息" width="25%" dataIndex="props" />
+            <Table.Column align="center" title="全部" width="25%" dataIndex="all_value" />
+            <Table.Column align="center" title="无房" dataIndex="none_value" width="25%" />
+            <Table.Column align="center" title="有房" dataIndex="second_value" width="25%" />
+          </Table>
+          <InfoDisplay title="销售方案公示" data={this.state.xsfa} style={{ width: '100%' }} />
+          <a href={data.gslink} style={{ display: data.gslink ? 'block' : 'none' }} target="_blank">
+            查看详细销售方案 >
+          </a>
         </div>
       </IceContainer>
     )
@@ -156,7 +202,7 @@ const styles = {
     color: 'rgba(0, 0, 0,.85)'
   },
   table: {
-    width: '420px',
+    width: '97%',
     marginTop: '10px'
   }
 }
