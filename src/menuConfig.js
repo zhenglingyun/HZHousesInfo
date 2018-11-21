@@ -6,6 +6,11 @@ const asideMenuConfig = [
     name: '全部楼盘',
     path: '/',
     icon: 'home2'
+  },
+  {
+    name: '地铁规划',
+    path: '/metro',
+    icon: 'menu'
   }
 ]
 

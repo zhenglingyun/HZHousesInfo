@@ -5,6 +5,7 @@
 import BasicLayout from './layouts/BasicLayout'
 import LibManagement from './pages/LibManagement'
 import LibFloorDetail from './pages/LibFloorDetail'
+import LibMetro from './pages/LibMetro'
 import NotFound from './pages/NotFound'
 
 const routerConfig = [
@@ -17,6 +18,11 @@ const routerConfig = [
     path: '/detail',
     layout: BasicLayout,
     component: LibFloorDetail
+  },
+  {
+    path: '/metro',
+    layout: BasicLayout,
+    component: LibMetro
   },
   {
     path: '*',
